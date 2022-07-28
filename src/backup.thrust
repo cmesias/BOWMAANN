@@ -1,0 +1,739 @@
+		if (debug){
+			player.mode = "editor";
+		}
+		if (!debug){
+			player.mode = "player";
+		}
+		//--------------------------------------------------------------------------------------------------------------------------//
+		//--------------------------------------------------------------------------------------------------------------------------//
+		//Move player on Z axis (not really, just looks it)
+		if (player.moveForward) {
+			//player.z += 0.23465;
+		} else if (player.moveBackward) {
+			//player.z -= 0.23465;
+		}
+
+		//Moving Player
+		if (player.moveleft) {
+			//Angle/Rotation of Player
+			if (player.rotateSpeed > -3) {
+				player.rotateSpeedAccel += 1;
+				if (player.rotateSpeedAccel > 10){
+					player.rotateSpeedAccel = 0;
+					player.rotateSpeed -= 1;
+				}
+			}
+			/*if (player.speedx > -10) {
+				player.accelSpeed+= 1;
+				if (player.accelSpeed> 10){
+					player.accelSpeed = 0;
+					//player.speedx -= 2;
+				}
+			}*/
+		} else if (player.moveright) {
+			//Angle/Rotation of Player
+			if (player.rotateSpeed < 3) {
+				player.rotateSpeedAccel += 1;
+				if (player.rotateSpeedAccel > 10){
+					player.rotateSpeedAccel = 0;
+					player.rotateSpeed += 1;
+				}
+			}
+			/*if (player.speedx < 10) {
+				player.accelSpeed+= 1;
+				if (player.accelSpeed> 10){
+					player.accelSpeed = 0;
+					//player.speedx += 2;
+				}
+			}*/
+		}
+		if (player.moveup) {
+			/*if (player.speedy > -10) {
+				player.accelSpeed+= 1;
+				if (player.accelSpeed> 10){
+					player.accelSpeed = 0;
+					//player.speedy -= 2;
+				}
+			}*/
+		} else if (player.movedown) {
+			/*if (player.speedy < 10) {
+				player.accelSpeed+= 1;
+				if (player.accelSpeed> 10){
+					player.accelSpeed = 0;
+					//player.speedy += 2;
+				}
+			}*/
+		}
+
+
+		//Add players angle with the rotation speed; Calculate players radian
+		player.angle += player.rotateSpeed;
+		player.radians = (3.1415926536/180)*(player.angle);
+
+		/*player.radianCos = cos(player.radians);
+		player.radianCos = floor(player.radianCos*10+0.5)/10;
+
+		player.radianSin = sin(player.radians);
+		player.radianSin = floor(player.radianSin*10+0.5)/10;*/
+
+		//Accelerate Player
+		if (player.thrust){
+			/*player.radianCos *= 2;
+			player.radianSin *= 2;
+			player.radianCos = round(player.radianCos);
+			player.radianSin = round(player.radianSin);
+			player.radianCos /= 2;
+			player.radianSin /= 2;*/
+
+			player.radianCos = round(cos(player.radians));
+			player.radianSin = round(sin(player.radians));
+
+			//player.radianCos = float(player.radianCos*100+0.5)/100;
+			//player.radianSin = float(player.radianSin*100+0.5)/100;
+
+			player.thrustAccelSpeed += 1;
+			if (player.thrustAccelSpeed > 20){
+				player.thrustAccelSpeed = 0;
+				//player.thrustSpeedX +=player.radianCos;
+				//player.thrustSpeedY +=player.radianSin;
+				player.thrustSpeedX2 += round(cos(player.radians));  //This is our real thrust speed; how fast our player will be traveling
+				player.thrustSpeedY2 += round(sin(player.radians));  //This is our real thrust speed; how fast our player will be traveling
+				//player.thrustSpeedX2 += round(cos(player.radians));
+				///player.thrustSpeedY2 += round(sin(player.radians));
+			}
+
+			if (player.radianCos > ERROR) {
+				//
+			}else if (player.radianCos < ERROR) {
+				//
+			} else{
+				if (player.thrustSpeedX2 > ERROR) {
+					player.thrustDecaySpeed += 1;
+					if (player.thrustDecaySpeed > 20){
+						player.thrustDecaySpeed = 0;
+						player.thrustSpeedX2 -= 1;
+					}
+				}
+				if (player.thrustSpeedX2 < ERROR) {
+					player.thrustDecaySpeed += 1;
+					if (player.thrustDecaySpeed > 20){
+						player.thrustDecaySpeed = 0;
+						player.thrustSpeedX2 += 1;
+					}
+				}
+			}
+
+			if (player.radianSin > ERROR) {
+				//
+			}else if (player.radianSin < ERROR) {
+				//
+			} else{
+				if (player.thrustSpeedY2 > ERROR) {
+					player.thrustDecaySpeed += 1;
+					if (player.thrustDecaySpeed > 20){
+						player.thrustDecaySpeed = 0;
+						player.thrustSpeedY2 -= 1;
+					}
+				}
+				if (player.thrustSpeedY2 < ERROR) {
+					player.thrustDecaySpeed += 1;
+					if (player.thrustDecaySpeed > 20){
+						player.thrustDecaySpeed = 0;
+						player.thrustSpeedY2 += 1;
+					}
+				}
+			}
+		}   // -- end Thruster
+
+		//Add speed to players x and y
+		player.x += (player.thrustSpeedX2 * 2);
+		player.y += (player.thrustSpeedY2 * 2);
+
+		if (player.thrustSpeedX > 10) {
+			player.thrustSpeedX = 10;
+		}
+		if (player.thrustSpeedY > 10) {
+			player.thrustSpeedY = 10;
+		}
+		if (player.thrustSpeedX < -10) {
+			player.thrustSpeedX = -10;
+		}
+		if (player.thrustSpeedY < -10) {
+			player.thrustSpeedY = -10;
+		}
+		//Player thrust decay speed
+		if (!player.thrust) {
+
+			//player.x += player.thrustSpeedXOld;
+			//player.y += player.thrustSpeedYOld;
+
+			//Thrust decay speed
+			if (player.radianCos > ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 20){
+					player.thrustDecaySpeed = 0;
+					player.radianCos -= 1;
+				}
+			}
+			if (player.radianSin > ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 20){
+					player.thrustDecaySpeed = 0;
+					player.radianSin -= 1;
+				}
+			}
+			if (player.radianCos < ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 20){
+					player.thrustDecaySpeed = 0;
+					player.radianCos += 1;
+				}
+			}
+			if (player.radianSin < ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 20){
+					player.thrustDecaySpeed = 0;
+					player.radianSin += 1;
+				}
+			}
+			//Our real thrust speed
+			if (player.thrustSpeedX2 > ERROR) {
+				int timerX2;
+				timerX2 += 1;
+				if (timerX2> 15){
+					timerX2 = 0;
+					player.thrustSpeedX2 -= 1;
+				}
+			}
+			if (player.thrustSpeedX2 < ERROR) {
+				int timerX2;
+				timerX2 += 1;
+				if (timerX2> 15){
+					timerX2 = 0;
+					player.thrustSpeedX2 += 1;
+				}
+			}
+			if (player.thrustSpeedY2 > ERROR) {
+				int timerY2;
+				timerY2 += 1;
+				if (timerY2 > 15){
+					timerY2= 0;
+					player.thrustSpeedY2 -= 1;
+				}
+			}
+			if (player.thrustSpeedY2 < ERROR) {
+				int timerY2;
+				timerY2 += 1;
+				if (timerY2> 15){
+					timerY2 = 0;
+					player.thrustSpeedY2 += 1;
+				}
+			}
+
+			//First thrust speed
+			if (player.thrustSpeedX > ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 15){
+					player.thrustDecaySpeed = 0;
+					player.thrustSpeedX -= 1;
+				}
+			}
+			if (player.thrustSpeedY > ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 15){
+					player.thrustDecaySpeed = 0;
+					player.thrustSpeedY -= 1;
+				}
+			}
+			if (player.thrustSpeedX < ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 15){
+					player.thrustDecaySpeed = 0;
+					player.thrustSpeedX += 1;
+				}
+			}
+			if (player.thrustSpeedY < ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 15){
+					player.thrustDecaySpeed = 0;
+					player.thrustSpeedY += 1;
+				}
+			}
+
+			//Old thrust speed
+			if (player.thrustSpeedXOld > ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 15){
+					player.thrustDecaySpeed = 0;
+					player.thrustSpeedXOld -= 1;
+				}
+			}
+			if (player.thrustSpeedYOld > ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 15){
+					player.thrustDecaySpeed = 0;
+					player.thrustSpeedYOld -= 1;
+				}
+			}
+			if (player.thrustSpeedXOld < ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 15){
+					player.thrustDecaySpeed = 0;
+					player.thrustSpeedXOld += 1;
+				}
+			}
+			if (player.thrustSpeedYOld < ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 15){
+					player.thrustDecaySpeed = 0;
+					player.thrustSpeedYOld += 1;
+				}
+			}
+		}
+
+		//Old thrust decay speed
+		if (player.radianCosOld > ERROR) {
+			player.thrustDecaySpeed += 1;
+			if (player.thrustDecaySpeed > 20){
+				player.thrustDecaySpeed = 0;
+				player.radianCosOld -= 1;
+			}
+		}
+		if (player.radianSinOld > ERROR) {
+			player.thrustDecaySpeed += 1;
+			if (player.thrustDecaySpeed > 20){
+				player.thrustDecaySpeed = 0;
+				player.radianSinOld -= 1;
+			}
+		}
+		if (player.radianCosOld < ERROR) {
+			player.thrustDecaySpeed += 1;
+			if (player.thrustDecaySpeed > 20){
+				player.thrustDecaySpeed = 0;
+				player.radianCosOld += 1;
+			}
+		}
+		if (player.radianSinOld < ERROR) {
+			player.thrustDecaySpeed += 1;
+			if (player.thrustDecaySpeed > 20){
+				player.thrustDecaySpeed = 0;
+				player.radianSinOld += 1;
+			}
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////////// MOVING /////////////////////////////////////////////////////////
+		//--------------------------------------------------------------------------------------------------------------------------//
+		if (debug){
+			player.mode = "editor";
+		}
+		if (!debug){
+			player.mode = "player";
+		}
+		//--------------------------------------------------------------------------------------------------------------------------//
+		//--------------------------------------------------------------------------------------------------------------------------//
+		//Move player on Z axis (not really, just looks it)
+		if (player.moveForward) {
+			//player.z += 0.23465;
+		} else if (player.moveBackward) {
+			//player.z -= 0.23465;
+		}
+
+		//Moving Player
+		if (player.moveleft) {
+			//Angle/Rotation of Player
+			if (player.rotateSpeed > -3) {
+				player.rotateSpeedAccel += 1;
+				if (player.rotateSpeedAccel > 10){
+					player.rotateSpeedAccel = 0;
+					player.rotateSpeed -= 1;
+				}
+			}
+			/*if (player.speedx > -10) {
+				player.accelSpeed+= 1;
+				if (player.accelSpeed> 10){
+					player.accelSpeed = 0;
+					//player.speedx -= 2;
+				}
+			}*/
+		} else if (player.moveright) {
+			//Angle/Rotation of Player
+			if (player.rotateSpeed < 3) {
+				player.rotateSpeedAccel += 1;
+				if (player.rotateSpeedAccel > 10){
+					player.rotateSpeedAccel = 0;
+					player.rotateSpeed += 1;
+				}
+			}
+			/*if (player.speedx < 10) {
+				player.accelSpeed+= 1;
+				if (player.accelSpeed> 10){
+					player.accelSpeed = 0;
+					//player.speedx += 2;
+				}
+			}*/
+		}
+		if (player.moveup) {
+			/*if (player.speedy > -10) {
+				player.accelSpeed+= 1;
+				if (player.accelSpeed> 10){
+					player.accelSpeed = 0;
+					//player.speedy -= 2;
+				}
+			}*/
+		} else if (player.movedown) {
+			/*if (player.speedy < 10) {
+				player.accelSpeed+= 1;
+				if (player.accelSpeed> 10){
+					player.accelSpeed = 0;
+					//player.speedy += 2;
+				}
+			}*/
+		}
+
+
+		//Add players angle with the rotation speed; Calculate players radian
+		player.angle += player.rotateSpeed;
+		player.radians = (3.1415926536/180)*(player.angle);
+
+		/*player.radianCos = cos(player.radians);
+		player.radianCos = floor(player.radianCos*10+0.5)/10;
+
+		player.radianSin = sin(player.radians);
+		player.radianSin = floor(player.radianSin*10+0.5)/10;*/
+
+		//Accelerate Player
+		if (player.thrust){
+			/*player.radianCos *= 2;
+			player.radianSin *= 2;
+			player.radianCos = round(player.radianCos);
+			player.radianSin = round(player.radianSin);
+			player.radianCos /= 2;
+			player.radianSin /= 2;*/
+
+			player.radianCos = round(cos(player.radians));
+			player.radianSin = round(sin(player.radians));
+
+			//player.radianCos = float(player.radianCos*100+0.5)/100;
+			//player.radianSin = float(player.radianSin*100+0.5)/100;
+
+			player.thrustAccelSpeed += 1;
+			if (player.thrustAccelSpeed > 20){
+				player.thrustAccelSpeed = 0;
+				player.thrustSpeedX +=player.radianCos;
+				player.thrustSpeedY +=player.radianSin;
+				player.thrustSpeedX2 += abs(  round(cos(player.radians)) );  //This is our real thrust speed; how fast our player will be traveling
+				player.thrustSpeedY2 += abs(  round(sin(player.radians)) );  //This is our real thrust speed; how fast our player will be traveling
+			}
+
+			if (player.radianCos > ERROR) {
+				//
+			}else if (player.radianCos < ERROR) {
+				//
+			} else{
+				if (player.thrustSpeedX > ERROR) {
+					player.thrustDecaySpeed += 1;
+					if (player.thrustDecaySpeed > 20){
+						player.thrustDecaySpeed = 0;
+						player.thrustSpeedX -= 1;
+					}
+				}
+				if (player.thrustSpeedX < ERROR) {
+					player.thrustDecaySpeed += 1;
+					if (player.thrustDecaySpeed > 20){
+						player.thrustDecaySpeed = 0;
+						player.thrustSpeedX += 1;
+					}
+				}
+			}
+
+			if (player.radianSin > ERROR) {
+				//
+			}else if (player.radianSin < ERROR) {
+				//
+			} else{
+				if (player.thrustSpeedY > ERROR) {
+					player.thrustDecaySpeed += 1;
+					if (player.thrustDecaySpeed > 20){
+						player.thrustDecaySpeed = 0;
+						player.thrustSpeedY -= 1;
+					}
+				}
+				if (player.thrustSpeedY < ERROR) {
+					player.thrustDecaySpeed += 1;
+					if (player.thrustDecaySpeed > 20){
+						player.thrustDecaySpeed = 0;
+						player.thrustSpeedY += 1;
+					}
+				}
+			}
+			//Add speed to players x and y
+			player.x += player.thrustSpeedX2 * cos(player.radians);
+			player.y += player.thrustSpeedY2 * sin(player.radians);
+		}   // -- end Thruster
+
+
+		if (player.thrustSpeedX > 10) {
+			player.thrustSpeedX = 10;
+		}
+		if (player.thrustSpeedY > 10) {
+			player.thrustSpeedY = 10;
+		}
+		if (player.thrustSpeedX < -10) {
+			player.thrustSpeedX = -10;
+		}
+		if (player.thrustSpeedY < -10) {
+			player.thrustSpeedY = -10;
+		}
+		//Player thrust decay speed
+		if (!player.thrust) {
+
+			player.x += player.thrustSpeedXOld;
+			player.y += player.thrustSpeedYOld;
+
+			//Thrust decay speed
+			if (player.radianCos > ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 20){
+					player.thrustDecaySpeed = 0;
+					player.radianCos -= 1;
+				}
+			}
+			if (player.radianSin > ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 20){
+					player.thrustDecaySpeed = 0;
+					player.radianSin -= 1;
+				}
+			}
+			if (player.radianCos < ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 20){
+					player.thrustDecaySpeed = 0;
+					player.radianCos += 1;
+				}
+			}
+			if (player.radianSin < ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 20){
+					player.thrustDecaySpeed = 0;
+					player.radianSin += 1;
+				}
+			}
+			//Our real thrust speed
+			if (player.thrustSpeedX2 > ERROR) {
+				int timerX2;
+				timerX2 += 1;
+				if (timerX2> 15){
+					timerX2 = 0;
+					player.thrustSpeedX2 -= 1;
+				}
+			}
+			if (player.thrustSpeedX2 < ERROR) {
+				int timerX2;
+				timerX2 += 1;
+				if (timerX2> 15){
+					timerX2 = 0;
+					player.thrustSpeedX2 += 1;
+				}
+			}
+			if (player.thrustSpeedY2 > ERROR) {
+				int timerY2;
+				timerY2 += 1;
+				if (timerY2 > 15){
+					timerY2= 0;
+					player.thrustSpeedY2 -= 1;
+				}
+			}
+			if (player.thrustSpeedY2 < ERROR) {
+				int timerY2;
+				timerY2 += 1;
+				if (timerY2> 15){
+					timerY2 = 0;
+					player.thrustSpeedY2 += 1;
+				}
+			}
+
+			//First thrust speed
+			if (player.thrustSpeedX > ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 15){
+					player.thrustDecaySpeed = 0;
+					player.thrustSpeedX -= 1;
+				}
+			}
+			if (player.thrustSpeedY > ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 15){
+					player.thrustDecaySpeed = 0;
+					player.thrustSpeedY -= 1;
+				}
+			}
+			if (player.thrustSpeedX < ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 15){
+					player.thrustDecaySpeed = 0;
+					player.thrustSpeedX += 1;
+				}
+			}
+			if (player.thrustSpeedY < ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 15){
+					player.thrustDecaySpeed = 0;
+					player.thrustSpeedY += 1;
+				}
+			}
+
+			//Old thrust speed
+			if (player.thrustSpeedXOld > ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 15){
+					player.thrustDecaySpeed = 0;
+					player.thrustSpeedXOld -= 1;
+				}
+			}
+			if (player.thrustSpeedYOld > ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 15){
+					player.thrustDecaySpeed = 0;
+					player.thrustSpeedYOld -= 1;
+				}
+			}
+			if (player.thrustSpeedXOld < ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 15){
+					player.thrustDecaySpeed = 0;
+					player.thrustSpeedXOld += 1;
+				}
+			}
+			if (player.thrustSpeedYOld < ERROR) {
+				player.thrustDecaySpeed += 1;
+				if (player.thrustDecaySpeed > 15){
+					player.thrustDecaySpeed = 0;
+					player.thrustSpeedYOld += 1;
+				}
+			}
+		}
+
+		//Old thrust decay speed
+		if (player.radianCosOld > ERROR) {
+			player.thrustDecaySpeed += 1;
+			if (player.thrustDecaySpeed > 20){
+				player.thrustDecaySpeed = 0;
+				player.radianCosOld -= 1;
+			}
+		}
+		if (player.radianSinOld > ERROR) {
+			player.thrustDecaySpeed += 1;
+			if (player.thrustDecaySpeed > 20){
+				player.thrustDecaySpeed = 0;
+				player.radianSinOld -= 1;
+			}
+		}
+		if (player.radianCosOld < ERROR) {
+			player.thrustDecaySpeed += 1;
+			if (player.thrustDecaySpeed > 20){
+				player.thrustDecaySpeed = 0;
+				player.radianCosOld += 1;
+			}
+		}
+		if (player.radianSinOld < ERROR) {
+			player.thrustDecaySpeed += 1;
+			if (player.thrustDecaySpeed > 20){
+				player.thrustDecaySpeed = 0;
+				player.radianSinOld += 1;
+			}
+		}
+
+		//Player thrust decay speed
+		if (!player.moveleft) {
+			if (player.rotateSpeed < 0) {
+				player.rotateSpeedDecel += 1;
+				if (player.rotateSpeedDecel > 5){
+					player.rotateSpeedDecel = 0;
+					player.rotateSpeed += 1;
+				}
+			}
+		}
+		if (!player.moveright) {
+			if (player.rotateSpeed > 0) {
+				player.rotateSpeedDecel += 1;
+				if (player.rotateSpeedDecel > 5){
+					player.rotateSpeedDecel = 0;
+					player.rotateSpeed -= 1;
+				}
+			}
+		}
+
+
+		//Calculate distance of mouse and player relative to camera
+		mxDum = mx;
+		myDum = my;
+        mxDistance =sqrt((mxDum+camx - player.x-player.w/2-cos(player.radians)*16) * (mxDum+camx - player.x-player.w/2-cos(player.radians)*16)
+					   + (myDum+camy - player.y-player.h/2-sin(player.radians)*16) * (myDum+camy - player.y-player.h/2-sin(player.radians)*16));
+
+		//Only apply the cam pan if the player is in locked screen
+		if (player.camlocked){
+			if (player.travelMode == "travel"){
+				//camx += player.panX;
+				//camy += player.panY;
+			}
+
+			if (player.travelMode == "fight"){
+				//camx -= player.panX;
+				//camy -= player.panY;
+			}
+		}
+
+		//If there is no delay then shoot!
+		if (player.mode == "player"){
+			if (!player.delay) {
+				if (player.initialshot) {
+					player.delay = true;
+					//Triple shot
+					if (player.powerup == "triple") {
+						//Mix_Pause(2);
+						//Mix_PlayChannel(2, sTower1Bullet, 0);
+						//fireTripleBullet(towerbullet, player.x + player.w,
+						//		player.y + player.h / 2);
+					}
+					//SHOOT LAZER BOIYYSZZ
+					if (player.powerup == "lazer") {
+						Mix_Pause(2);
+						Mix_PlayChannel(2, sTower1Bullet, 0);
+		    			/*fireBullet2(particle, "lazer", 100, player.x+player.w/2-8,player.y+player.h/2-2,
+		    								cos(player.radians)*16, sin(player.radians)*16,
+		    								17, 4,mx+camx,my+camy,15,
+		    								200,
+		    								1);*/
+						fireParticle(particle, 50, "lazer", cos(player.radians)*16,
+															sin(player.radians)*16,
+															player.x+player.w/2-8,
+														    player.y+player.h/2-2,
+															16, 4,
+															cos(player.radians),sin(player.radians), 25, 1, 75, 1, 1, 100, 1, player.angle, 1);
+					}
+				}
+			}
+			//Start delay timer after our first shot!
+			if (player.delay) {
+				player.delayT += player.AttackSpeed;
+				if (player.delayT > 40) {
+					player.delay = false;
+					player.delayT = 0;
+				}
+			}
+		}
+		//--------------------------------------------------------------------------------------------------------------------------//
+		///////////////////////////////////////////////////////////// MOVING /////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
