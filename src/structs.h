@@ -122,7 +122,7 @@ void renderArrow(Arrow arrow[], int camX, int camY) {
 
 			//Render arrow
 			//if (arrow[i].onScreen){
-			gArrow.render(arrow[i].x - camX, arrow[i].y-8 - camY, arrow[i].w,32, 0, arrow[i].a);
+			gAxe.render(arrow[i].x - camX, arrow[i].y-8 - camY, arrow[i].w,32, 0, arrow[i].a);
 
 			if (arrow[i].collide){
 				SDL_Rect player = { arrow[i].x-camX, arrow[i].y-camY, arrow[i].w, arrow[i].h };

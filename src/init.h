@@ -119,6 +119,7 @@ TTF_Font *gFont26 = NULL;
 LTexture gText;
 LTexture gBG;
 LTexture gArrow;
+LTexture gAxe;
 LTexture gGrass;
 LTexture gStone;
 LTexture gEasterEgg;
@@ -643,6 +644,7 @@ bool loadMedia() {
 
 	gBG.loadFromFile("img/bg.png");
 	gArrow.loadFromFile("img/arrow.png");
+	gAxe.loadFromFile("img/axe.png");
 	gGrass.loadFromFile("img/grass.png");
 	gStone.loadFromFile("img/stone.png");
 	gEasterEgg.loadFromFile("img/easterEgg.png");
@@ -701,6 +703,7 @@ void close() {
 	gText.free();
 	gBG.free();
 	gArrow.free();
+	gAxe.free();
 	gGrass.free();
 	gStone.free();
 	gEasterEgg.free();
