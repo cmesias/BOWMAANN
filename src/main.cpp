@@ -96,7 +96,7 @@ SDL_Surface *message = NULL;
 
 
 //Player 1
-struct other2 {
+struct Cam {
 public:
 	double x = 0, y = 0;
 	bool moveup = false, movedown = false, moveleft = false, moveright = false;
@@ -107,7 +107,7 @@ public:
 
 
 //Player 1
-struct other {
+struct Player {
 public:
 	double x = 0, y = 0;
 	int w = 32, h = 64;
